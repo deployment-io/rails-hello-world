@@ -54,6 +54,12 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
+# Build secrets test (deployment.io): TEST_TOKEN is mounted for this step only.
+# The second line prints the value on purpose: the job log must show <TEST_TOKEN>.
+RUN --mount=type=secret,id=TEST_TOKEN,env=TEST_TOKEN,required=true \
+    echo "TEST_TOKEN has ${#TEST_TOKEN} characters" && \
+    echo "TEST_TOKEN is $TEST_TOKEN"
+
 
 
 
